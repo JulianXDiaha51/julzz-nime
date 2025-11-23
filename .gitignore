@@ -1,0 +1,30 @@
+# Folder dependensi. Folder ini bisa dibuat ulang kapan saja dengan `npm install`.
+node_modules/
+
+# Hasil build dari Next.js. Folder ini dibuat setiap kali kamu menjalankan `npm run dev` atau `npm run build`.
+.next/
+out/
+
+# File environment variables. SANGAT PENTING untuk keamanan!
+# File ini berisi kunci API atau password rahasia yang tidak boleh di-upload.
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Log files dari package manager
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Output dari deployment Vercel
+.vercel/
+
+# Pengaturan spesifik untuk IDE/Editor (opsional tapi bagus)
+.vscode/
+.idea/
+
+# File sistem operasi (macOS dan Windows)
+.DS_Store
+Thumbs.db
