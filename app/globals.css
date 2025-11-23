@@ -1,0 +1,61 @@
+/* File: app/globals.css */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #1f2937; /* bg-gray-800 */
+}
+::-webkit-scrollbar-thumb {
+  background: #ef4444; /* bg-red-500 */
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #dc2626; /* bg-red-600 */
+}
+
+/* Background gaya TikTok */
+.custom-tiktok-background {
+  background: radial-gradient(circle at 10% 20%, #0f0f0f 0%, #000000 100%);
+  min-height: 100vh;
+  color: white;
+}
+
+
+.custom-tiktok-background::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMjUwIDI1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZmlsdGVyIGlkPSJhIj48ZmVuY3R1cmJ1bGVuY2UgdHlwZT0idHVyYnVsZW5jZSIgYmFzZUZyZXF1ZW5jeT0iLjUiIG51bU9jdGF2ZXM9IjIiIHByb2R1Y3RUeXBlPSJzbG9wZSIvPjxwYXRoIGlkPSJiIiBkPSJNMCAwSDI1MFYyNTBIMFYwWiIvPjxtYXNrIGlkPSJjIj48dXNlIGhyZWY9IiNiIiBmaWxsPSIjZmZmIi8+PC9tYXNrPjx1c2UgaHJlZj0iYiIgZmlsbD0idXJsKCNhKSIgbWFzaz0idXJsKCNjKSIgb3BhY2l0eT0iLjE1Ii8+PC9zdmc+');
+  opacity: 0.1;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Animasi untuk Hero Section */
+@keyframes fadeInFromBottom {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInFromBottom 0.8s ease-out forwards;
+}
+
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
