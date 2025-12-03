@@ -3,6 +3,7 @@ import "./globals.css";
 import Footer from "./components/Footer";
 import { Config } from "./config";
 import Navbar from "./components/Navbar";
+import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,6 +24,7 @@ export default function RootLayout({ children }) {
           {children}
         </main>
         <Footer />
+        <Analytics />
       </body>
     </html>
   );
