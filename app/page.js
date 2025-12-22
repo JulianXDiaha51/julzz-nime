@@ -1,114 +1,206 @@
-// File: app/page.js
+// File: app/page.jsx
+import { Suspense } from 'react';
+import HeroSection from '@/components/Home/HeroSection';
+import AnimeSection from '@/components/Home/AnimeSection';
+import LoadingSkeleton from '@/components/Home/LoadingSkeleton';
+import StatsBar from '@/components/Home/StatsBar';
+import FeaturedSection from '@/components/Home/FeaturedSection';
+import { fetchHomeData } from '@/lib/api';
+import { generateMetadata } from '@/lib/metadata';
 
-import AnimeCard from './components/AnimeCard';
-import Link from 'next/link';
-import Image from 'next/image';
-import SearchIcon from './components/SearchIcon';
-import { Config } from './config';
-import SearchBar from './components/SearchBar';
-
-// Fungsi Fetch baru
-async function getHomeData() {
-  const res = await fetch('https://www.sankavollerei.com/anime/samehadaku/home', {
-    next: { revalidate: 3600 } // Revalidasi data setiap 1 jam
+// Generate metadata for SEO
+export async function generateMetadata() {
+  return await generateMetadata({
+    title: 'Stream Anime Gratis - Kualitas HD',
+    description: 'Nonton anime terbaru dan terpopuler dengan subtitle Indonesia. Koleksi lengkap anime dari berbagai genre dengan streaming gratis dan kualitas HD.',
+    keywords: 'nonton anime, anime subtitle Indonesia, anime terbaru, anime gratis, streaming anime HD',
   });
-  if (!res.ok) {
-    throw new Error('Gagal mengambil data dari API Samehadaku');
-  }
-  return res.json();
 }
 
-export default async function HomePage() {
-  const homeApi = await getHomeData();
-  const { recent, movie, top10 } = homeApi.data;
+// Main home content component
+async function HomeContent() {
+  const data = await fetchHomeData();
+  
+  if (!data) {
+    return (
+      <div className="text-center py-16 px-4">
+        <div className="max-w-md mx-auto">
+          <div className="text-gray-400 mb-4">
+            <svg className="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h3 className="text-xl font-semibold text-white mb-2">Data Tidak Tersedia</h3>
+          <p className="text-gray-400">
+            Maaf, data anime sedang tidak dapat diakses. Silakan coba lagi nanti.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
-  // Logika untuk anime random di hero section (pakai data 'recent')
-  const randomAnime = recent.animeList[Math.floor(Math.random() * recent.animeList.length)];
+  const { recent, movie, top10 } = data;
 
   return (
-    <main className="container mx-auto px-4 py-8 relative z-10">
-      
-      {/* Hero Section (tidak berubah) */}
-      <section className="flex flex-col items-center justify-center text-center px-4 mb-16">
-        <div className="relative mb-4 md:mb-6">
-          <Image
-            src={Config.logo}
-            alt="Hero GIF" width={160} height={160}
-            className="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-pink-500/50 object-cover shadow-lg shadow-pink-500/20"
-            unoptimized={true}
-          />
-        </div>
-        <h1 className="text-4xl md:text-5xl font-extrabold text-white leading-tight mb-3">
-          {Config.name}
-        </h1>
-        <p className="text-lg text-gray-400 mb-8 max-w-md">
-          {Config.description}
-        </p>
-        <SearchBar />
-        <div className="text-gray-500 text-sm mb-10">
-          <span>Top search:</span>
-          <span className="ml-2 text-gray-400">Kimetsu no Yaiba, One Piece, Jujutsu Kaisen</span>
-        </div>
-        <div className="flex flex-col sm:flex-row gap-4">
-          <Link href={Config.donateLink} target="_blank" rel="noopener noreferrer" className="border-2 border-pink-500 text-pink-500 font-bold py-3 px-10 rounded-full transition-all duration-300 hover:bg-pink-500 hover:text-white">
-            Donate
-          </Link>
-          <Link href={`/anime/${randomAnime.animeId}`} className="bg-pink-600 text-white font-bold py-3 px-10 rounded-full transition-all duration-300 hover:bg-pink-700 shadow-lg shadow-pink-500/20 transform hover:scale-105">
-            Watch Anime
-          </Link>
-        </div>
-      </section>
+    <>
+      {/* Hero Section */}
+      <HeroSection 
+        randomAnime={recent?.animeList?.[0]}
+        totalAnime={data.totalAnime || 10000}
+      />
 
-      {/* Bagian Rilisan Terbaru */}
-      <h2 id="recent-anime" className="text-4xl font-bold text-white mb-6 border-l-4 border-red-500 pl-4">
-        Rilisan Terbaru
-      </h2>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        {recent.animeList.map((anime) => (
-          <AnimeCard
-            key={anime.animeId}
-            slug={anime.animeId}
-            poster={anime.poster}
-            title={anime.title}
-            info={`Eps ${anime.episodes}`}
-            releasedOn={anime.releasedOn}
-          />
-        ))}
+      {/* Stats Bar */}
+      <StatsBar stats={{
+        total: data.totalAnime || 10000,
+        recent: recent?.animeList?.length || 24,
+        top: top10?.animeList?.length || 10,
+        movie: movie?.animeList?.length || 12,
+      }} />
+
+      {/* Recent Releases */}
+      <AnimeSection
+        title="Rilisan Terbaru"
+        subtitle="Episode terbaru yang baru saja rilis"
+        animeList={recent?.animeList}
+        type="recent"
+        viewAllLink="/recent"
+        emptyMessage="Belum ada anime terbaru yang dirilis"
+      />
+
+      {/* Top 10 Popular */}
+      <AnimeSection
+        title="Top 10 Populer"
+        subtitle="Anime paling populer minggu ini"
+        animeList={top10?.animeList}
+        type="top"
+        showRank
+        viewAllLink="/trending"
+        emptyMessage="Belum ada data anime populer"
+      />
+
+      {/* Movie Recommendations */}
+      <AnimeSection
+        title="Rekomendasi Movie"
+        subtitle="Film anime terbaik untuk ditonton"
+        animeList={movie?.animeList}
+        type="movie"
+        viewAllLink="/genre/movie"
+        emptyMessage="Belum ada rekomendasi movie"
+      />
+
+      {/* Featured Collections */}
+      <FeaturedSection
+        collections={[
+          {
+            title: 'Anime Musim Ini',
+            description: 'Temukan anime yang sedang tayang musim ini',
+            href: '/ongoing',
+            count: 50,
+            icon: '🌸',
+            color: 'from-pink-500 to-rose-500',
+          },
+          {
+            title: 'Sudah Tamat',
+            description: 'Tonton anime lengkap dari awal sampai akhir',
+            href: '/completed',
+            count: 5000,
+            icon: '✅',
+            color: 'from-green-500 to-emerald-500',
+          },
+          {
+            title: 'By Genre',
+            description: 'Jelajahi anime berdasarkan genre favorit',
+            href: '/genre',
+            count: 24,
+            icon: '🏷️',
+            color: 'from-purple-500 to-violet-500',
+          },
+        ]}
+      />
+    </>
+  );
+}
+
+// Main page component
+export default function HomePage() {
+  return (
+    <main className="min-h-screen relative">
+      {/* Background effects */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-red-500/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl" />
+        <div className="absolute inset-0 bg-grid-pattern opacity-5" />
       </div>
 
-      {/* Bagian Top 10 Populer */}
-      <h2 className="text-4xl font-bold text-white mt-12 mb-6 border-l-4 border-red-500 pl-4">
-        Top 10 Populer
-      </h2>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        {top10.animeList.map((anime) => (
-          <AnimeCard
-            key={anime.animeId}
-            slug={anime.animeId}
-            poster={anime.poster}
-            title={anime.title}
-            rating={anime.score}
-            rank={anime.rank}
-          />
-        ))}
-      </div>
+      <div className="relative z-10">
+        {/* Loading with suspense */}
+        <Suspense fallback={<LoadingSkeleton />}>
+          <HomeContent />
+        </Suspense>
 
-      {/* Bagian Rekomendasi Movie */}
-      <h2 className="text-4xl font-bold text-white mt-12 mb-6 border-l-4 border-red-500 pl-4">
-        Rekomendasi Movie
-      </h2>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        {movie.animeList.map((anime) => (
-          <AnimeCard
-            key={anime.animeId}
-            slug={anime.animeId}
-            poster={anime.poster}
-            title={anime.title}
-            info="Movie"
-            releasedOn={anime.releaseDate}
-          />
-        ))}
+        {/* CTA Section */}
+        <div className="container mx-auto px-4 py-16">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="bg-gradient-to-r from-gray-900/50 to-black/50 backdrop-blur-sm border border-gray-800 rounded-2xl p-8 md:p-12">
+              <div className="inline-flex p-3 bg-red-500/20 rounded-xl mb-6">
+                <span className="text-3xl">🎉</span>
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                Mulai Streaming Sekarang
+              </h2>
+              <p className="text-gray-400 text-lg mb-8 max-w-2xl mx-auto">
+                Bergabung dengan jutaan penggemar anime yang sudah menikmati koleksi terlengkap kami.
+                Gratis, tanpa iklan mengganggu, dan selalu update.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <a
+                  href="/trending"
+                  className="px-8 py-3 bg-gradient-to-r from-red-600 to-pink-600 text-white font-bold rounded-xl hover:shadow-2xl hover:shadow-red-500/30 transition-all duration-300 transform hover:scale-105"
+                >
+                  Lihat Trending
+                </a>
+                <a
+                  href="/schedule"
+                  className="px-8 py-3 bg-gray-900/50 backdrop-blur-sm border border-gray-800 text-white font-bold rounded-xl hover:bg-gray-800/70 transition-all duration-300"
+                >
+                  Cek Jadwal
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Newsletter Signup */}
+        <div className="container mx-auto px-4 pb-16">
+          <div className="max-w-2xl mx-auto">
+            <div className="bg-gradient-to-r from-gray-900 to-black border border-gray-800 rounded-2xl p-8">
+              <h3 className="text-2xl font-bold text-white mb-2">Dapatkan Update</h3>
+              <p className="text-gray-400 mb-6">
+                Dapatkan notifikasi ketika anime favoritmu update episode baru.
+              </p>
+              <form className="space-y-4">
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <input
+                    type="email"
+                    placeholder="Email kamu"
+                    className="flex-1 px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  />
+                  <button
+                    type="submit"
+                    className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors"
+                  >
+                    Subscribe
+                  </button>
+                </div>
+                <p className="text-xs text-gray-500">
+                  Kami tidak akan spam email kamu. Hanya update penting tentang anime.
+                </p>
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
     </main>
   );
-}
+    }
