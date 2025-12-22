@@ -28,7 +28,7 @@ const Footer = () => {
               className="flex items-center gap-1 font-semibold text-pink-400 hover:text-pink-300 transition-colors"
             >
               <GitHubIcon className="w-4 h-4" />
-              JulianzzGITHUB
+              Julzz2ND
             </a>
           </div>
         </div>
