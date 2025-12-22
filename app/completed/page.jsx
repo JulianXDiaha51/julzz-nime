@@ -168,4 +168,4 @@ export default async function CompletedPage({ searchParams }) {
       </div>
     </main>
   );
-      }
+        }
