@@ -1,6 +1,9 @@
 /* File: app/globals.css */
 
-/* Reset dan base styles - ditulis manual */
+/* ==========================================================================
+   Reset & Base Styles
+   ========================================================================== */
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -9,93 +12,236 @@
 
 html {
   scroll-behavior: smooth;
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.6;
   overflow-x: hidden;
-}
-
-/* Tailwind di-import tapi kita tambahkan custom */
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
-
-/* Scrollbar custom - style sederhana */
-.scrollbar-custom {
-  scrollbar-width: thin;
-  scrollbar-color: #ef4444 #1f2937;
-}
-
-.scrollbar-custom::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-.scrollbar-custom::-webkit-scrollbar-track {
-  background: #1a1a1a;
-  border-radius: 3px;
-}
-
-.scrollbar-custom::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #ef4444, #dc2626);
-  border-radius: 3px;
-  transition: background 0.3s;
-}
-
-.scrollbar-custom::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #dc2626, #b91c1c);
-}
-
-/* Background utama */
-.main-bg {
-  background: 
-    radial-gradient(circle at 0% 0%, rgba(239, 68, 68, 0.05) 0%, transparent 50%),
-    radial-gradient(circle at 100% 0%, rgba(99, 102, 241, 0.05) 0%, transparent 50%),
-    radial-gradient(circle at 50% 100%, rgba(139, 92, 246, 0.05) 0%, transparent 50%),
-    #000000;
-  position: relative;
-  min-height: 100vh;
+  background-color: #000000;
   color: #ffffff;
 }
 
-/* Overlay texture - lebih subtle */
-.main-bg::after {
+/* ==========================================================================
+   Tailwind Directives
+   ========================================================================== */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+   Custom Properties (CSS Variables)
+   ========================================================================== */
+
+:root {
+  /* Color palette */
+  --color-primary: #ef4444;
+  --color-primary-dark: #dc2626;
+  --color-primary-light: #f87171;
+  
+  --color-secondary: #8b5cf6;
+  --color-accent: #3b82f6;
+  
+  --color-bg-dark: #0f0f0f;
+  --color-bg-darker: #000000;
+  --color-bg-card: #1f2937;
+  --color-bg-card-hover: #374151;
+  
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #d1d5db;
+  --color-text-muted: #9ca3af;
+  
+  /* Spacing */
+  --header-height: 64px;
+  --container-padding: 1rem;
+  
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-base: 300ms ease;
+  --transition-slow: 500ms ease;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-base: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+  --shadow-red: 0 0 20px rgba(239, 68, 68, 0.3);
+}
+
+@media (min-width: 640px) {
+  :root {
+    --container-padding: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --container-padding: 2rem;
+  }
+}
+
+/* ==========================================================================
+   Custom Scrollbar
+   ========================================================================== */
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-primary) var(--color-bg-card);
+}
+
+/* Webkit (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-card);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--color-primary), var(--color-primary-dark));
+  border-radius: 5px;
+  border: 2px solid var(--color-bg-card);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--color-primary-light), var(--color-primary));
+}
+
+::-webkit-scrollbar-corner {
+  background: var(--color-bg-card);
+}
+
+/* ==========================================================================
+   Selection & Focus Styles
+   ========================================================================== */
+
+::selection {
+  background-color: rgba(239, 68, 68, 0.3);
+  color: var(--color-text-primary);
+}
+
+::-moz-selection {
+  background-color: rgba(239, 68, 68, 0.3);
+  color: var(--color-text-primary);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 0.25rem;
+}
+
+/* ==========================================================================
+   Typography Utilities
+   ========================================================================== */
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.text-pretty {
+  text-wrap: pretty;
+}
+
+/* Japanese font utility */
+.font-japanese {
+  font-family: 'Noto Sans JP', 'Hiragino Kaku Gothic Pro', 'Meiryo', sans-serif;
+  font-weight: 400;
+}
+
+/* Anime title styling */
+.anime-title {
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+}
+
+/* ==========================================================================
+   Background Gradients & Effects
+   ========================================================================== */
+
+.bg-main-gradient {
+  background: radial-gradient(
+    circle at 20% 30%,
+    rgba(31, 41, 55, 0.8) 0%,
+    rgba(15, 23, 42, 0.9) 40%,
+    rgba(0, 0, 0, 1) 100%
+  );
+  position: relative;
+  min-height: 100vh;
+}
+
+.bg-main-gradient::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   background-image: 
-    linear-gradient(90deg, transparent 95%, rgba(239, 68, 68, 0.03) 100%),
-    linear-gradient(0deg, transparent 95%, rgba(99, 102, 241, 0.03) 100%);
-  background-size: 40px 40px;
-  opacity: 0.4;
+    radial-gradient(circle at 10% 20%, rgba(239, 68, 68, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.05) 0%, transparent 70%);
   pointer-events: none;
   z-index: 0;
 }
 
-/* Container untuk konten */
-.content-wrapper {
-  position: relative;
+.bg-noise {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
   z-index: 1;
-  isolation: isolate;
 }
 
-/* Animasi masuk */
-@keyframes slideUp {
-  0% {
+/* Glass morphism effect */
+.glass {
+  background: rgba(31, 41, 55, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-dark {
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* ==========================================================================
+   Animation Keyframes
+   ========================================================================== */
+
+@keyframes fade-in-up {
+  from {
     opacity: 0;
-    transform: translateY(24px);
+    transform: translateY(1rem);
   }
-  100% {
+  to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-@keyframes fadeIn {
+@keyframes fade-in-down {
+  from {
+    opacity: 0;
+    transform: translateY(-1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
   from {
     opacity: 0;
   }
@@ -104,85 +250,196 @@ body {
   }
 }
 
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
 @keyframes pulse-subtle {
   0%, 100% {
     opacity: 1;
   }
   50% {
-    opacity: 0.8;
+    opacity: 0.7;
   }
 }
 
-/* Class utilitas animasi */
-.fade-in {
-  animation: fadeIn 0.6s ease-out;
-}
-
-.slide-up {
-  animation: slideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.pulse-subtle {
-  animation: pulse-subtle 2s ease-in-out infinite;
-}
-
-/* Delay untuk staggered animation */
-.stagger-1 { animation-delay: 0.1s; }
-.stagger-2 { animation-delay: 0.2s; }
-.stagger-3 { animation-delay: 0.3s; }
-.stagger-4 { animation-delay: 0.4s; }
-
-/* Glass effect - modern tapi natural */
-.glass-panel {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  transition: all 0.3s ease;
-}
-
-.glass-panel:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(239, 68, 68, 0.3);
-  transform: translateY(-2px);
-}
-
-/* Gradient text */
-.gradient-text {
-  background: linear-gradient(90deg, #ef4444, #8b5cf6, #3b82f6);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-size: 200% auto;
-  animation: gradient-shift 3s ease infinite;
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 @keyframes gradient-shift {
   0%, 100% {
-    background-position: 0% center;
+    background-position: 0% 50%;
   }
   50% {
-    background-position: 100% center;
+    background-position: 100% 50%;
   }
 }
 
-/* Button styles - lebih organik */
-.btn-primary {
+@keyframes scan {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+/* ==========================================================================
+   Animation Classes
+   ========================================================================== */
+
+.animate-fade-in-up {
+  animation: fade-in-up var(--transition-base) ease-out forwards;
+}
+
+.animate-fade-in-down {
+  animation: fade-in-down var(--transition-base) ease-out forwards;
+}
+
+.animate-fade-in {
+  animation: fade-in var(--transition-base) ease-out forwards;
+}
+
+.animate-slide-in-left {
+  animation: slide-in-left var(--transition-base) ease-out forwards;
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right var(--transition-base) ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scale-in var(--transition-base) ease-out forwards;
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-gradient-shift {
+  animation: gradient-shift 3s ease infinite;
+  background-size: 200% auto;
+}
+
+.animate-scan {
+  animation: scan 2s linear infinite;
+}
+
+/* Delay utilities */
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+.delay-600 { animation-delay: 600ms; }
+.delay-700 { animation-delay: 700ms; }
+.delay-800 { animation-delay: 800ms; }
+.delay-900 { animation-delay: 900ms; }
+.delay-1000 { animation-delay: 1000ms; }
+
+/* ==========================================================================
+   Layout Utilities
+   ========================================================================== */
+
+.container-padding {
+  padding-left: var(--container-padding);
+  padding-right: var(--container-padding);
+}
+
+.full-bleed {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+}
+
+/* ==========================================================================
+   Custom Component Styles
+   ========================================================================== */
+
+/* Card hover effects */
+.card-hover {
+  transition: all var(--transition-base);
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+/* Button styles */
+.btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 28px;
-  background: linear-gradient(135deg, #ef4444, #dc2626);
-  color: white;
-  border: none;
-  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
   font-weight: 600;
-  font-size: 16px;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  border-radius: 0.5rem;
+  transition: all var(--transition-base);
   position: relative;
   overflow: hidden;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  color: white;
+  border: none;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-red);
 }
 
 .btn-primary::before {
@@ -200,39 +457,18 @@ body {
   left: 100%;
 }
 
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(239, 68, 68, 0.3);
-}
-
-.btn-primary:active {
-  transform: translateY(0);
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .glass-panel {
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-  }
-  
-  .main-bg::after {
-    opacity: 0.3;
-  }
-}
-
-/* Loading state */
+/* Loading dots */
 .loading-dots {
   display: inline-flex;
-  gap: 4px;
+  gap: 0.25rem;
 }
 
 .loading-dots span {
-  width: 6px;
-  height: 6px;
+  width: 0.5rem;
+  height: 0.5rem;
   border-radius: 50%;
-  background: #ef4444;
-  animation: loading-bounce 1.4s infinite;
+  background-color: currentColor;
+  animation: pulse-subtle 1.4s infinite;
 }
 
 .loading-dots span:nth-child(2) {
@@ -243,36 +479,239 @@ body {
   animation-delay: 0.4s;
 }
 
-@keyframes loading-bounce {
-  0%, 80%, 100% {
-    transform: translateY(0);
-    opacity: 0.6;
-  }
-  40% {
-    transform: translateY(-6px);
-    opacity: 1;
-  }
+/* Line clamp utilities */
+.line-clamp-1 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
 }
 
-/* Hover effect untuk cards */
-.card-hover {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
-.card-hover:hover {
-  transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+.line-clamp-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
 }
 
-/* Selection color */
-::selection {
-  background-color: rgba(239, 68, 68, 0.3);
-  color: white;
+/* Aspect ratio utilities */
+.aspect-poster {
+  aspect-ratio: 2/3;
 }
 
-/* Focus styles untuk aksesibilitas */
-:focus-visible {
-  outline: 2px solid #ef4444;
+.aspect-video {
+  aspect-ratio: 16/9;
+}
+
+.aspect-square {
+  aspect-ratio: 1/1;
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(90deg, var(--color-primary), var(--color-secondary), var(--color-accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  background-size: 200% auto;
+}
+
+/* Border gradient */
+.border-gradient {
+  border: 2px solid transparent;
+  background: linear-gradient(var(--color-bg-card), var(--color-bg-card)) padding-box,
+              linear-gradient(135deg, var(--color-primary), var(--color-secondary)) border-box;
+}
+
+/* ==========================================================================
+   Accessibility
+   ========================================================================== */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.focus-visible {
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
-  border-radius: 4px;
-    }
+}
+
+/* ==========================================================================
+   Responsive Utilities
+   ========================================================================== */
+
+@media (max-width: 640px) {
+  .mobile\:hidden {
+    display: none;
+  }
+  
+  .mobile\:flex {
+    display: flex;
+  }
+  
+  .mobile\:block {
+    display: block;
+  }
+}
+
+/* ==========================================================================
+   Print Styles
+   ========================================================================== */
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  
+  a {
+    color: black !important;
+    text-decoration: underline;
+  }
+}
+
+/* ==========================================================================
+   Custom Classes for Anime App
+   ========================================================================== */
+
+/* Anime status badges */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.status-ongoing {
+  background-color: rgba(245, 158, 11, 0.2);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.status-completed {
+  background-color: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.status-upcoming {
+  background-color: rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+/* Score display */
+.score-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  background-color: rgba(234, 179, 8, 0.2);
+  color: #eab308;
+  font-weight: 700;
+  font-size: 0.875rem;
+}
+
+/* Episode counter */
+.episode-counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  background-color: rgba(139, 92, 246, 0.2);
+  color: #8b5cf6;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   Custom Utilities (can be used with @apply in components)
+   ========================================================================== */
+
+@layer utilities {
+  .text-shadow {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
+  
+  .text-shadow-lg {
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  }
+  
+  .backdrop-blur-sm {
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+  
+  .backdrop-blur-md {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  
+  .backdrop-blur-lg {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  
+  .bg-blur {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  
+  .bg-grid-pattern {
+    background-image: 
+      linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+}
+
+/* ==========================================================================
+   Dark mode support (if needed)
+   ========================================================================== */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+  }
+}
+
+/* ==========================================================================
+   Performance optimizations
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  }
